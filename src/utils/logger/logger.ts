@@ -1,6 +1,8 @@
 import { utilities, WinstonModule } from 'nest-winston';
 import * as winstonDaily from 'winston-daily-rotate-file';
 import * as winston from 'winston';
+import * as chalk from "chalk";
+import * as OS from "os";
 
 const env = process.env.NODE_ENV;
 const logDir = __dirname + '/../../../logs'; // log 파일을 관리할 폴더
@@ -28,8 +30,8 @@ export const logger = WinstonModule.createLogger({
       // production 환경은 자원을 아끼기 위해 simple 포맷 사용
           ? winston.format.simple() 
           : winston.format.combine(
-              winston.format.timestamp(),
-              utilities.format.nestLike('프로젝트이름', {
+              // winston.format.timestamp(),
+              utilities.format.nestLike( chalk.blueBright.bgCyanBright.bold(OS.type()), {
                 prettyPrint: true, // nest에서 제공하는 옵션. 로그 가독성을 높여줌
               }),
             ),

@@ -5,7 +5,9 @@ import {
     LoggerService,
     NestMiddleware,
   } from '@nestjs/common';
-  import { Request, Response, NextFunction } from 'express';
+import { Request, Response, NextFunction } from 'express';
+import * as chalk from "chalk";
+import * as moment from 'moment';
   
   @Injectable()
   export class LoggerMiddleware implements NestMiddleware {
@@ -20,10 +22,17 @@ import {
       res.on('finish', () => {
         const { statusCode } = res;
         this.logger.log(
-          `${method} ${originalUrl} ${statusCode} ${ip} ${userAgent}`,
+`
+${chalk.cyanBright.bold(  moment().format("YYYY-DD-MM HH:mm:ss.SSS"))}
+${chalk.yellow.bold("["+method+"]")}
+${chalk.greenBright.bold.italic("PATH: ") + chalk.cyanBright.bold(originalUrl)}
+${chalk.greenBright.bold.italic("BODY: ") + chalk.whiteBright.bold.underline(JSON.stringify(req.body))}
+${chalk.greenBright.bold.italic("CODE: ") + chalk[statusCode === 200 ? "green" : statusCode < 400 ? "yellow" : "red"].bold(statusCode)}
+${chalk.greenBright.bold.italic("IP: ") + chalk.white.bold(ip.split("::ffff:")[1])}
+`,
         );
       });
-  
+      // ${chalk.userAgent}
       next();
     }
   }

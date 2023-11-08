@@ -1,4 +1,4 @@
-import sendQuery from "src/actions/database/sendQuery";
+import sendQuery from "src/utils/database/sendQuery";
 import { escape } from "mysql";
 
 const getKakaoUserInfo = async (kakaoUserId: number) => {

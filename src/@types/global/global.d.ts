@@ -1,5 +1,5 @@
 
-import { Cluster } from "ioredis";
+import Redis, { Cluster } from "ioredis";
 import * as AWS from "aws-sdk";
 import { Pool } from "mysql2";
 import generatePool from "src/actions/database/generatePool";
@@ -9,10 +9,10 @@ import generateDynamoClient from "src/actions/database/generateDynamoClient";
 
 
 declare global {
-    var pubClient: Cluster;
-    var subClient: Cluster;
+    var pubClient: Redis;
+    var subClient: Redis;
     var pool: Pool;
-    var redisClient: Cluster;
+    var redisClient: Redis;
     var geoRedis: any;
     var dynamoClient: AWS.DynamoDB.DocumentClient;
 }

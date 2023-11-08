@@ -1,7 +1,10 @@
+import { postTest1ResponseDto, postTest1RequestDto } from './../../dtos/auth/postTest1';
+import { plainToInstance } from 'class-transformer';
 import { Injectable } from '@nestjs/common';
 import { Request, Response } from 'express';
 import { postTest2RequestDto } from 'src/dtos/auth/postTest2';
 import getChatModel from 'src/model/chat/getChatModel';
+import { validate, ValidationError } from 'class-validator';
 
 const kakao = {
     clientID: process.env.KAKAO_REST_API,
@@ -17,11 +20,24 @@ export class AuthService {
         return 'Hello World!';
       }
     
-      
+    async postTest1(body: postTest1RequestDto): Promise<postTest1ResponseDto | ValidationError[]> {
+        // let body = postTest2RequestDto(req.body);
+        console.log("aa")
+        let result2 = await redisClient.get(body.hi);
+        console.log(result2)
+        // redisClient.get("test",(err,result)=>{
+        //     console.log(err)
+        //     console.log(result);
+        // })
+        // console.log(result)
+        // return new postTest1ResponseDto({"hi": "bb", "bye": "aa"});
+        let result = plainToInstance(postTest1ResponseDto,{hi: result2, bye: "aa"});
+        let validation = await validate(result);
+        return validation.length===0 ? result : validation;
+    }
 
     async postTest2(body: postTest2RequestDto): Promise<string> {
         // let body = postTest2RequestDto(req.body);
-       console.log(body)
         let result = await getChatModel({chat_room_id: 0, limit: 30});
         return JSON.stringify(result);
     }

@@ -1,4 +1,4 @@
-import sendQueries from "src/actions/database/sendQueries";
+import sendQueries from "src/utils/database/sendQueries";
 import { escape } from "mysql";
 const insertKakaoUser = async (kakaoUserId: number,kakaoUserProfileImage?: string) => {
     return await sendQueries([
