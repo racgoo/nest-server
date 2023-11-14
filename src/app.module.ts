@@ -5,13 +5,22 @@ import { AppService } from './app.service';
 import { LoggerMiddleware } from './middleware/logger.middleware';
 import { AuthModule } from './modules/auth/auth.module';
 import { logger } from './utils/logger/logger';
+import { APP_FILTER } from '@nestjs/core';
+import { ServiceExceptionToHttpExceptionFilter } from './modules/exception/exception';
 
 @Module({
   imports: [ConfigModule.forRoot({
     isGlobal: true,
   }),AuthModule],
   controllers: [AppController],
-  providers: [AppService,Logger],
+  providers: [
+    AppService,
+    Logger,
+    {
+      provide: APP_FILTER,
+      useClass: ServiceExceptionToHttpExceptionFilter,
+    },
+  ],
 })
 
 // export class AppModule {}

@@ -25,10 +25,10 @@ const getChatModel = async ({chat_room_id=0, limit=30}: getChatModelProps) => {
         IndexName: "register_date-index",
         KeyConditionExpression: "chat_room_id = :chat_room_id",
         ExpressionAttributeValues: {
-            ":chat_room_id": 0
+            ":chat_room_id": chat_room_id
         },
         ScanIndexForward: false,
-        Limit: 30
+        Limit: limit
     }).promise();
     return result;
 }

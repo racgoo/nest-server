@@ -5,6 +5,8 @@ import { Body, Controller, Get, Post, Req, Res } from '@nestjs/common';
 import { Request, Response } from 'express';
 import { AuthService } from './auth.service';
 import { plainToClass, plainToInstance, TransformPlainToInstance } from 'class-transformer';
+import { ResponseType } from 'src/utils/reponse/generateResponse';
+import { postKakaoLoginVerifyRequestDto } from 'src/dtos/auth/postKakaoLoginVerify';
 
 @Controller('auth')
 export class AuthController {
@@ -16,28 +18,28 @@ export class AuthController {
     }
 
     @Post("/test1")
-    postTest1(@Body() body: postTest1RequestDto): Promise<postTest1ResponseDto | ValidationError[]> {
-      return this.authService.postTest1(body);
+    postTest1(@Body() body: postTest1RequestDto, @Res() res: Response): Promise<ResponseType> {
+      return this.authService.postTest1(body,res);
     }
 
     @Post("/test2")
-    postTest2(@Body() body: postTest2RequestDto): Promise<string> {
-      return this.authService.postTest2(body);
+    postTest2(@Body() body: postTest2RequestDto,@Res() res: Response): Promise<ResponseType> {
+      return this.authService.postTest2(body,res);
     }
 
     @Get("/kakao/login")
-    getKakaoLogin(@Req() req: Request, @Res() res: Response) : void {
-      return this.authService.getKakaoLogin(req,res);
+    getKakaoLogin(@Res() res: Response) : Promise<void> {
+      return this.authService.getKakaoLogin(res);
     }
 
     @Get("/kakao/logout")
-    getKakaoLogout(@Req() req: Request, @Res() res: Response) : void {
-      return this.authService.getKakaoLogout(req,res);
+    getKakaoLogout(@Res() res: Response) : Promise<void> {
+      return this.authService.getKakaoLogout(res);
     }
     
     @Post("/kakao/loginVerify")
-    postKakaoLoginVerify(@Req() req: Request, @Res() res: Response) : void {
-      return this.authService.postKakaoLoginVerify(req,res);
+    postKakaoLoginVerify(@Body() body: postKakaoLoginVerifyRequestDto, @Res() res: Response) : Promise<ResponseType> {
+      return this.authService.postKakaoLoginVerify(body,res);
     }
 
 

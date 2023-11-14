@@ -1,11 +1,26 @@
 import sendQuery from "src/utils/database/sendQuery";
 import { escape } from "mysql";
 
-const getKakaoUserInfo = async (kakaoUserId: number) => {
+export interface getUserInfoByKakaoModelPropsType {
+    kakaoUserId: string;
+}
+
+export type getUserInfoByKakaoModelReturnType =Array<{
+    user_id: number
+    e_mail: string
+    image: string
+    nickname: string
+    phone_number: string
+    platform: string
+    update_date: string
+    register_date: string
+}>
+
+const getUserInfoByKakaoModel = async ({kakaoUserId}: getUserInfoByKakaoModelPropsType): Promise<getUserInfoByKakaoModelReturnType> => {
     return await sendQuery(`
-    SELECT user.user_id, user.e_mail, user.image, user.nickname, user.phone_number, oauth.platform, user.update_date, user.register_date  FROM user 
-            LEFT JOIN oauth ON user.user_id = oauth.user_id
-            WHERE platform = 'kakao' AND unique_key = '${escape(kakaoUserId)}';
+    SELECT tbl_user.user_id, tbl_user.e_mail, tbl_user.image, tbl_user.nickname, tbl_user.phone_number, tbl_oauth.platform, tbl_user.update_date, tbl_user.register_date  FROM tbl_user 
+    LEFT JOIN tbl_oauth ON tbl_user.user_id = tbl_oauth.user_id
+    WHERE platform = 'kakao' AND unique_key = ${escape(kakaoUserId)};
     `)
 }
-export default getKakaoUserInfo;
+export default getUserInfoByKakaoModel;

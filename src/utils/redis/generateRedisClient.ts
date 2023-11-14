@@ -9,7 +9,6 @@ const generateRedisClient = (): Redis => {
       password: process.env.REDIS_PASSWORD,
       requirepass: process.env.REDIS_PASSWORD
     }));
-    console.log(clusterNodes)
     
     const redisClient = new Redis({
       host: process.env.REDIS_HOST,
@@ -33,16 +32,10 @@ const generateRedisClient = (): Redis => {
     //   console.log(test)
     //   console.log("connet");
     // })
-    redisClient.on("*",(res)=>{
-      console.log(res)
-    })
+    
     redisClient.on('connect', (stream) => {
       console.info('[Redis] CONNECTED');
     })
-
-      setTimeout(()=>{
-        redisClient.get("test222",(d)=>{console.log("hi",d)})
-      },2000);
 
     redisClient.on('disconnect', () => {
       console.info('[Redis] DISCONNECTED');
