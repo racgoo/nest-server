@@ -5,12 +5,15 @@ import { postTest2RequestDto } from 'src/dtos/auth/postTest2';
 import getChatModel from 'src/model/chat/getChatModel';
 import generateResponse from 'src/utils/reponse/generateResponse';
 import { ResponseType } from 'src/utils/reponse/generateResponse';
-import { postKakaoLoginVerifyRequestDto, postKakaoLoginVerifyResponseDto } from 'src/dtos/auth/postKakaoLoginVerify';
+import { kakaoLoginVerifyRequestDto, kakaoLoginVerifyResponseDto } from 'src/dtos/auth/kakaoLoginVerify';
 import QueryString from "qs";
 import axios from "axios";
 import insertUserByKakaoWithDuplicateModel from 'src/model/auth/insertKakaoUserInfoModel';
 import getUserInfoByKakaoModel from 'src/model/auth/getKakaoUserInfoModel';
 import generateToken from 'src/utils/jwt/generateToken';
+import { authByUserTokenRequestDto } from 'src/dtos/auth/authByUserToken';
+import verifyToken from 'src/utils/jwt/verifyToken';
+import getUserInfoByUserIdModel from 'src/model/auth/getUserInfoByUserIdModel';
 const kakao = {
     clientID: process.env.KAKAO_REST_API,
     clientSecret: process.env.KAKAO_CLIENT_SECRET,
@@ -38,17 +41,25 @@ export class AuthService {
         return generateResponse.SUCCESS({res,data: result});
     }
 
-    async getKakaoLogin(res: Response): Promise<void> {
+    async authByUserToken(body: authByUserTokenRequestDto, res: Response): Promise<ResponseType> {
+        let verifiedTokenData = verifyToken(body.token,res);
+        console.log(2)
+        let userInfo = await getUserInfoByUserIdModel({user_id: verifiedTokenData.user_id});
+        console.log(3)
+        return generateResponse.SUCCESS({res,data: userInfo});
+    }
+
+    async kakaoLogin(res: Response): Promise<void> {
         const kakaoAuthURL = `https://kauth.kakao.com/oauth/authorize?client_id=${kakao.clientID}&redirect_uri=${kakao.redirectUri}&response_type=code&scope=profile_image`;
         return res.redirect(kakaoAuthURL);
     }
 
-    async getKakaoLogout(res: Response): Promise<void> {
+    async kakaoLogout(res: Response): Promise<void> {
         const kakaoLogoutURL = `https://kauth.kakao.com/oauth/logout?client_id=${kakao.clientID}&logout_redirect_uri=${kakao.logoutUri}`;
         return res.redirect(kakaoLogoutURL);
     }
 
-    async postKakaoLoginVerify(body: postKakaoLoginVerifyRequestDto,res: Response): Promise<ResponseType> {
+    async kakaoLoginVerify(body: kakaoLoginVerifyRequestDto,res: Response): Promise<ResponseType> {
         let { code } = body;
         let tokenResponse = await axios.post("https://kauth.kakao.com/oauth/token",{
             grant_type: 'authorization_code',
@@ -82,8 +93,7 @@ export class AuthService {
             return generateResponse.ENTITY_NOT_FOUND({res,message: "사용자를 찾을 수 없습니다."});
         }
         let token = generateToken(userInfo[0].user_id);
-        return generateResponse.INTERNAL_SERVER_ERROR({res,message: "fucl"});
-        return generateResponse.SUCCESS({res,data: {token,...userInfo[0]},dto: postKakaoLoginVerifyResponseDto});
+        return generateResponse.SUCCESS({res,data: {token,...userInfo[0]},dto: kakaoLoginVerifyResponseDto});
     }
 
 

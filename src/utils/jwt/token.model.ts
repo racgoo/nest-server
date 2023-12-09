@@ -1,3 +1,3 @@
 export interface tokenDataType {
-    user_id : string;
+    user_id : number;
 }

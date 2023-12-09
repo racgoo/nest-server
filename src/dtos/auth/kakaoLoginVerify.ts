@@ -1,12 +1,15 @@
 import { IsDateString, IsEmail, IsNotEmpty, IsNumber, IsPhoneNumber, IsString  } from "class-validator";
 import { getUserInfoByKakaoModelReturnType } from "src/model/auth/getKakaoUserInfoModel";
-export class postKakaoLoginVerifyRequestDto {
+import { defaultRequestDto } from "../common/defaultRequestDto";
+import { PartialType } from "@nestjs/mapped-types";
+
+export class kakaoLoginVerifyRequestDto extends PartialType(defaultRequestDto) {
     @IsNotEmpty()
     @IsString()
     public code: string;
 }
 
-export class postKakaoLoginVerifyResponseDto {
+export class kakaoLoginVerifyResponseDto {
 
     @IsNotEmpty()
     @IsNumber()

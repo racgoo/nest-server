@@ -1,5 +1,4 @@
 import * as jwt from "jsonwebtoken";
-import { tokenDataType } from "./token.model";
 require("dotenv").config();
 const generateToken = (user_id: number): string => {
     return jwt.sign({user_id :user_id}, process.env.JWT_SECRET, {

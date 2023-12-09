@@ -7,14 +7,20 @@ import { AuthModule } from './modules/auth/auth.module';
 import { logger } from './utils/logger/logger';
 import { APP_FILTER } from '@nestjs/core';
 import { ServiceExceptionToHttpExceptionFilter } from './modules/exception/exception';
-
+import { ScheduleModule } from '@nestjs/schedule';
+import { CronService } from './cron/cron.controller';
 @Module({
-  imports: [ConfigModule.forRoot({
-    isGlobal: true,
-  }),AuthModule],
+  imports: [
+    ConfigModule.forRoot({
+      isGlobal: true,
+    }),
+    AuthModule,
+    ScheduleModule.forRoot()
+  ],
   controllers: [AppController],
   providers: [
     AppService,
+    CronService,
     Logger,
     {
       provide: APP_FILTER,

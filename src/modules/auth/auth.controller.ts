@@ -6,7 +6,8 @@ import { Request, Response } from 'express';
 import { AuthService } from './auth.service';
 import { plainToClass, plainToInstance, TransformPlainToInstance } from 'class-transformer';
 import { ResponseType } from 'src/utils/reponse/generateResponse';
-import { postKakaoLoginVerifyRequestDto } from 'src/dtos/auth/postKakaoLoginVerify';
+import { kakaoLoginVerifyRequestDto } from 'src/dtos/auth/kakaoLoginVerify';
+import { authByUserTokenRequestDto } from 'src/dtos/auth/authByUserToken';
 
 @Controller('auth')
 export class AuthController {
@@ -27,19 +28,26 @@ export class AuthController {
       return this.authService.postTest2(body,res);
     }
 
+    @Post("/authByUserToken")
+    authByUserToken(@Body() body: authByUserTokenRequestDto,@Res() res: Response): Promise<ResponseType> {
+      // return this.authService.postTest1(body,res);
+      console.log("hihi")
+      return this.authService.authByUserToken(body,res);
+    }
+
     @Get("/kakao/login")
-    getKakaoLogin(@Res() res: Response) : Promise<void> {
-      return this.authService.getKakaoLogin(res);
+    kakaoLogin(@Res() res: Response) : Promise<void> {
+      return this.authService.kakaoLogin(res);
     }
 
     @Get("/kakao/logout")
-    getKakaoLogout(@Res() res: Response) : Promise<void> {
-      return this.authService.getKakaoLogout(res);
+    kakaoLogout(@Res() res: Response) : Promise<void> {
+      return this.authService.kakaoLogout(res);
     }
     
     @Post("/kakao/loginVerify")
-    postKakaoLoginVerify(@Body() body: postKakaoLoginVerifyRequestDto, @Res() res: Response) : Promise<ResponseType> {
-      return this.authService.postKakaoLoginVerify(body,res);
+    kakaoLoginVerify(@Body() body: kakaoLoginVerifyRequestDto, @Res() res: Response) : Promise<ResponseType> {
+      return this.authService.kakaoLoginVerify(body,res);
     }
 
 
