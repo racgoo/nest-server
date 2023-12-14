@@ -11,9 +11,12 @@ import axios from "axios";
 import insertUserByKakaoWithDuplicateModel from 'src/model/auth/insertKakaoUserInfoModel';
 import getUserInfoByKakaoModel from 'src/model/auth/getKakaoUserInfoModel';
 import generateToken from 'src/utils/jwt/generateToken';
-import { authByUserTokenRequestDto } from 'src/dtos/auth/authByUserToken';
+
 import verifyToken from 'src/utils/jwt/verifyToken';
 import getUserInfoByUserIdModel from 'src/model/auth/getUserInfoByUserIdModel';
+import insertRefreshTokenModel from 'src/model/auth/insertRefreshToken';
+import { authByRefreshTokenRequestDto, authByRefreshTokenResponseDto } from 'src/dtos/auth/authByRefreshToken';
+import insertRefreshTokenForceModel from 'src/model/auth/insertRefreshTokenForce';
 const kakao = {
     clientID: process.env.KAKAO_REST_API,
     clientSecret: process.env.KAKAO_CLIENT_SECRET,
@@ -23,30 +26,17 @@ const kakao = {
 
 @Injectable()
 export class AuthService {
-
-    getTest(): string {
-        return 'Hello World!';
-      }
-    
-    async postTest1(body: postTest1RequestDto,res: Response): Promise<ResponseType> {
-        let result = await redisClient.get(body.hi);
-        let test = await getUserInfoByKakaoModel({kakaoUserId: "2844897955"})
-        console.log(test);
-        return generateResponse.SUCCESS({res,data: {result}});
-    }
-
-    async postTest2(body: postTest2RequestDto, res: Response): Promise<ResponseType> {
-        let result = await getChatModel({chat_room_id: 0, limit: 30});
-        console.log(result)
-        return generateResponse.SUCCESS({res,data: result});
-    }
-
-    async authByUserToken(body: authByUserTokenRequestDto, res: Response): Promise<ResponseType> {
-        let verifiedTokenData = verifyToken(body.token,res);
-        console.log(2)
-        let userInfo = await getUserInfoByUserIdModel({user_id: verifiedTokenData.user_id});
-        console.log(3)
-        return generateResponse.SUCCESS({res,data: userInfo});
+    async authByRefreshToken(body: authByRefreshTokenRequestDto, res: Response): Promise<ResponseType> {
+        let verfifiedData = verifyToken(body.refresh_token,"refresh",res);
+        if(verfifiedData.user_id===-1)return; //verfifiedData 여기서 처리하고 res.send까지 해줌. ㄱ
+        let { access_token, refresh_token } = generateToken(verfifiedData.user_id);
+        let result = await insertRefreshTokenModel({user_id: verfifiedData.user_id, current_refresh_token: body.refresh_token, new_refresh_token: refresh_token});
+        if(result.affectedRows!==0){
+            let [userInfo] = await getUserInfoByUserIdModel({user_id: verfifiedData.user_id});
+            return generateResponse.SUCCESS({res,data: {...userInfo,access_token,refresh_token},dto:  authByRefreshTokenResponseDto});
+        }else{
+            return generateResponse.ACCESS_DENIED({res});
+        }
     }
 
     async kakaoLogin(res: Response): Promise<void> {
@@ -92,8 +82,10 @@ export class AuthService {
         if(!userInfo || userInfo.length===0){
             return generateResponse.ENTITY_NOT_FOUND({res,message: "사용자를 찾을 수 없습니다."});
         }
-        let token = generateToken(userInfo[0].user_id);
-        return generateResponse.SUCCESS({res,data: {token,...userInfo[0]},dto: kakaoLoginVerifyResponseDto});
+        let { refresh_token, access_token } = generateToken(userInfo[0].user_id);
+        //set refresh token
+        await insertRefreshTokenForceModel({new_refresh_token: refresh_token, user_id: userInfo[0].user_id});
+        return generateResponse.SUCCESS({res,data: {refresh_token, access_token,...userInfo[0]},dto: kakaoLoginVerifyResponseDto});
     }
 
 

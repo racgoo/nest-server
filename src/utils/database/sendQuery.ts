@@ -15,20 +15,16 @@ const sendQuery = async (query): Promise<any> => {
                         if (!error) {
                             resolve(rows);
                         } else {
-                            console.log(error)
                             resolve(null);
                         }
                     })
 
                 } else {
-                    console.log(err)
-                    console.log("me2")
                     resolve(null);
                 }
             });
         } catch (err) {
             console.log(err)
-            console.log("me")
             resolve(null);
         }
     });

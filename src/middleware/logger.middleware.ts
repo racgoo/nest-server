@@ -19,7 +19,7 @@ import * as moment from 'moment';
 
       // 응답이 끝나는 이벤트가 발생하면 로그를 찍는다.
       res.on('finish', () => {
-        const code = res.locals.customResponse?.code ?? 200;
+        const code = res.locals.context?.code ?? 200;
         this.logger.log(
 `
 ${chalk.cyanBright.bold(  moment().format("YYYY-DD-MM HH:mm:ss.SSS"))}

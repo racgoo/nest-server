@@ -9,7 +9,6 @@ export class AppService {
   }
 
   postHello(req: Request): string {
-    console.log(req.body);
     return 'Hello World!';
   }
   

@@ -11,6 +11,12 @@ export class kakaoLoginVerifyRequestDto extends PartialType(defaultRequestDto) {
 
 export class kakaoLoginVerifyResponseDto {
 
+    @IsString()
+    access_token: string | null;
+    
+    @IsString()
+    refresh_token: string | null;
+
     @IsNotEmpty()
     @IsNumber()
     user_id: number

@@ -7,32 +7,15 @@ import { AuthService } from './auth.service';
 import { plainToClass, plainToInstance, TransformPlainToInstance } from 'class-transformer';
 import { ResponseType } from 'src/utils/reponse/generateResponse';
 import { kakaoLoginVerifyRequestDto } from 'src/dtos/auth/kakaoLoginVerify';
-import { authByUserTokenRequestDto } from 'src/dtos/auth/authByUserToken';
+import { authByRefreshTokenRequestDto } from 'src/dtos/auth/authByRefreshToken';
 
 @Controller('auth')
 export class AuthController {
     constructor(private readonly authService: AuthService) {}
 
-    @Get("/test")
-    getHello(): string {
-      return this.authService.getTest();
-    }
-
-    @Post("/test1")
-    postTest1(@Body() body: postTest1RequestDto, @Res() res: Response): Promise<ResponseType> {
-      return this.authService.postTest1(body,res);
-    }
-
-    @Post("/test2")
-    postTest2(@Body() body: postTest2RequestDto,@Res() res: Response): Promise<ResponseType> {
-      return this.authService.postTest2(body,res);
-    }
-
-    @Post("/authByUserToken")
-    authByUserToken(@Body() body: authByUserTokenRequestDto,@Res() res: Response): Promise<ResponseType> {
-      // return this.authService.postTest1(body,res);
-      console.log("hihi")
-      return this.authService.authByUserToken(body,res);
+    @Post("/authByRefreshToken")
+    authByRefreshToken(@Body() body: authByRefreshTokenRequestDto,@Res() res: Response): Promise<ResponseType> {
+      return this.authService.authByRefreshToken(body,res);
     }
 
     @Get("/kakao/login")

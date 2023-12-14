@@ -14,6 +14,7 @@ export type getUserInfoByKakaoModelReturnType =Array<{
     platform: string
     update_date: string
     register_date: string
+    refresh_token: string
 }>
 
 const getUserInfoByKakaoModel = async ({kakaoUserId}: getUserInfoByKakaoModelPropsType): Promise<getUserInfoByKakaoModelReturnType> => {

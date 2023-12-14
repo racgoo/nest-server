@@ -8,7 +8,7 @@ export class ServiceExceptionToHttpExceptionFilter implements ExceptionFilter {
   catch(exception: Error, host: ArgumentsHost): void {
     const ctx = host.switchToHttp();
     const response = ctx.getResponse<Response>();
-    console.log()
+    console.log(exception)
     if(exception.message === "Bad Request Exception"){
         generateResponse.BAD_REQUEST({res: response,message: "잘못된 요청입니다."});
     }else{

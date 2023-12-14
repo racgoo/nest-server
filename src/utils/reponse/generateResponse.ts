@@ -2,6 +2,9 @@ import { Req, Res } from "@nestjs/common";
 import { plainToInstance } from "class-transformer";
 import { validate } from "class-validator";
 import { response, Response } from "express";
+// import {} from ""
+// import { Response } from "@nestjs/common";
+
 
 export class ResponseWithCode {
     readonly code: number;
@@ -48,6 +51,9 @@ export class ResponseWithCode {
     },
     ACCESS_DENIED: ({res, data={}, message = "ACCESS_DENIED",dto=null}: generateErrorMethodPropsType) => {
       return sendDataToClientWithLogger(res, dto, new ResponseWithCode(403, message, "ACCESS_DENIED"));
+    },
+    ACCESS_EXPIRED: ({res, data={}, message = "ACCESS_EXPIRED",dto=null}: generateErrorMethodPropsType) => {
+      return sendDataToClientWithLogger(res, dto, new ResponseWithCode(410, message, "ACCESS_EXPIRED"));
     },
     INTERNAL_SERVER_ERROR: ({res, data={}, message = "INTERNAL_SERVER_ERROR",dto=null}: generateErrorMethodPropsType) => {
       return sendDataToClientWithLogger(res, dto, new ResponseWithCode(500, message, "INTERNAL_SERVER_ERROR"));

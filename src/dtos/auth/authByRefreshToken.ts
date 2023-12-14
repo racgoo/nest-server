@@ -1,13 +1,19 @@
 import { IsDateString, IsEmail, IsNotEmpty, IsNumber, IsPhoneNumber, IsString  } from "class-validator";
-import { getUserInfoByKakaoModelReturnType } from "src/model/auth/getKakaoUserInfoModel";
 import { defaultRequestDto } from "../common/defaultRequestDto";
 import { PartialType } from "@nestjs/mapped-types";
 
-export class authByUserTokenRequestDto extends PartialType(defaultRequestDto) {
+export class authByRefreshTokenRequestDto extends PartialType(defaultRequestDto) {
 
 }
 
-export class authByUserTokenResponseDto {
+export class authByRefreshTokenResponseDto {
+
+    @IsString()
+    access_token: string
+
+    @IsString()
+    refresh_token: string
+
     @IsNotEmpty()
     @IsNumber()
     user_id: number
@@ -39,4 +45,5 @@ export class authByUserTokenResponseDto {
     @IsNotEmpty()
     @IsDateString()
     register_date: string
+
 }

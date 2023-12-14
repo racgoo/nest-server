@@ -6,6 +6,7 @@ interface insertUserByKakaoModelPropsType {
     kakaoUserProfileImage?: string;
 }
 
+
 const insertUserByKakaoWithDuplicateModel = async ({kakaoUserId,kakaoUserProfileImage}: insertUserByKakaoModelPropsType) => {
     return await sendQueries([
         `INSERT INTO tbl_user (nickname, image) VALUES('${escape(kakaoUserId)}님', ${escape(kakaoUserProfileImage)});`,
