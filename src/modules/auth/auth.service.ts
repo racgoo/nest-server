@@ -79,6 +79,7 @@ export class AuthService {
         await insertUserByKakaoWithDuplicateModel({kakaoUserId: kakaoUserData.data.id, kakaoUserProfileImage: kakaoUserData?.data?.properties?.profile_image});
         // //check user ( check user is inserted )
         let userInfo = await getUserInfoByKakaoModel({kakaoUserId: kakaoUserData.data.id});
+        console.log(userInfo)
         if(!userInfo || userInfo.length===0){
             return generateResponse.ENTITY_NOT_FOUND({res,message: "사용자를 찾을 수 없습니다."});
         }

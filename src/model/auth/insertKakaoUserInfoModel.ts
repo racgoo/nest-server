@@ -11,7 +11,7 @@ const insertUserByKakaoWithDuplicateModel = async ({kakaoUserId,kakaoUserProfile
     return await sendQueries([
         `INSERT INTO tbl_user (nickname, image) VALUES('${escape(kakaoUserId)}님', ${escape(kakaoUserProfileImage)});`,
         `SET @new_user_id = LAST_INSERT_ID();`,
-        `INSERT INTO oauth (user_id,platform,unique_key) VALUES(@new_user_id,'kakao','${escape(kakaoUserId)}');`
+        `INSERT INTO tbl_oauth (user_id,platform,unique_key) VALUES(@new_user_id,'kakao','${escape(kakaoUserId)}');`
     ]);
 }
 export default insertUserByKakaoWithDuplicateModel;
