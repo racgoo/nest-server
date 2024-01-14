@@ -61,6 +61,9 @@ export class ResponseWithCode {
     BAD_REQUEST: ({res, data={}, message = "BAD_REQUEST",dto=null}: generateErrorMethodPropsType) => {
       return sendDataToClientWithLogger(res, dto, new ResponseWithCode(400, message, "BAD_REQUEST"));
     },
+    ENTITY_DUPLICATED: ({res, data={}, message = "ENTITY_DUPLICATED",dto=null}: generateErrorMethodPropsType) => {
+      return sendDataToClientWithLogger(res, dto, new ResponseWithCode(422, message, "ENTITY_DUPLICATED"));
+    },
   }
 
   export default generateResponse;

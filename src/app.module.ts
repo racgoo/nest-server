@@ -11,6 +11,8 @@ import { ScheduleModule } from '@nestjs/schedule';
 import { CronService } from './cron/cron.controller';
 import { HealthModule } from './modules/health/health.module';
 import { TokenAuthMiddleware } from './middleware/tokenAuth.middleware';
+import { CalenderModule } from './modules/calendar/calendar.module';
+import { CalendarService } from './modules/calendar/calendar.service';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -18,12 +20,14 @@ import { TokenAuthMiddleware } from './middleware/tokenAuth.middleware';
     }),
     AuthModule,
     HealthModule,
+    CalenderModule,
     ScheduleModule.forRoot()
   ],
   controllers: [AppController],
   providers: [
     AppService,
     CronService,
+    CalendarService,
     Logger,
     {
       provide: APP_FILTER,
@@ -32,7 +36,6 @@ import { TokenAuthMiddleware } from './middleware/tokenAuth.middleware';
   ],
 })
 
-// export class AppModule {}
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
     consumer.apply(

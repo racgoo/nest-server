@@ -14,7 +14,7 @@ import generateToken from 'src/utils/jwt/generateToken';
 
 import verifyToken from 'src/utils/jwt/verifyToken';
 import getUserInfoByUserIdModel from 'src/model/auth/getUserInfoByUserIdModel';
-import insertRefreshTokenModel from 'src/model/auth/insertRefreshToken';
+import insertRefreshTokenModel from 'src/model/auth/insertRefreshTokenModel';
 import { authByRefreshTokenRequestDto, authByRefreshTokenResponseDto } from 'src/dtos/auth/authByRefreshToken';
 import insertRefreshTokenForceModel from 'src/model/auth/insertRefreshTokenForce';
 const kakao = {
@@ -79,7 +79,6 @@ export class AuthService {
         await insertUserByKakaoWithDuplicateModel({kakaoUserId: kakaoUserData.data.id, kakaoUserProfileImage: kakaoUserData?.data?.properties?.profile_image});
         // //check user ( check user is inserted )
         let userInfo = await getUserInfoByKakaoModel({kakaoUserId: kakaoUserData.data.id});
-        console.log(userInfo)
         if(!userInfo || userInfo.length===0){
             return generateResponse.ENTITY_NOT_FOUND({res,message: "사용자를 찾을 수 없습니다."});
         }
