@@ -21,7 +21,7 @@ export class CalendarService {
         if(body.user_id===null)return generateResponse.ACCESS_DENIED({res});
         let result = await insertCalenderModel({user_id: body.user_id, calenderName: body.calendarName});
         if(result===null)return generateResponse.INTERNAL_SERVER_ERROR({res});
-        if(result.affectedRows===0)return generateResponse.ENTITY_DUPLICATED({res});
+        if(result.affectedRows===0)return generateResponse.ENTITY_DUPLICATED({res,message: "이미 같은 이름의 캘린더가 존재합니다."});
         return generateResponse.SUCCESS({res, data: {}, dto: createCalenderResponseDto});
     }
 

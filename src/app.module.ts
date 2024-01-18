@@ -7,12 +7,14 @@ import { AuthModule } from './modules/auth/auth.module';
 import { logger } from './utils/logger/logger';
 import { APP_FILTER } from '@nestjs/core';
 import { ServiceExceptionToHttpExceptionFilter } from './modules/exception/exception';
-import { ScheduleModule } from '@nestjs/schedule';
+import { ScheduleModule as SchedulerModule } from '@nestjs/schedule';
 import { CronService } from './cron/cron.controller';
 import { HealthModule } from './modules/health/health.module';
 import { TokenAuthMiddleware } from './middleware/tokenAuth.middleware';
 import { CalenderModule } from './modules/calendar/calendar.module';
 import { CalendarService } from './modules/calendar/calendar.service';
+import { ScheduleService } from './modules/schedule/schedule.service';
+import { ScheduleModule } from './modules/schedule/schedule.module';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -21,13 +23,15 @@ import { CalendarService } from './modules/calendar/calendar.service';
     AuthModule,
     HealthModule,
     CalenderModule,
-    ScheduleModule.forRoot()
+    ScheduleModule,
+    SchedulerModule.forRoot()
   ],
   controllers: [AppController],
   providers: [
     AppService,
     CronService,
     CalendarService,
+    ScheduleService,
     Logger,
     {
       provide: APP_FILTER,
