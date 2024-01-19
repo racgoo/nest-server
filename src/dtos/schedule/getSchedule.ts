@@ -21,5 +21,6 @@ export class getScheduleResponseDto {
         update_date: string
         due_date: string
         calendar_id: number
+        is_done: boolean
     }[]
 }

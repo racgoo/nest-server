@@ -17,6 +17,7 @@ export type selectScheduleModelReturnType = {
     update_date: string
     due_date: string
     calendar_id: number
+    is_done: boolean
 }[]
 
 const selectScheduleModel = async ({user_id,calendar_id,start_date,end_date}: selectScheduleModelPropsType): Promise<selectScheduleModelReturnType> => {

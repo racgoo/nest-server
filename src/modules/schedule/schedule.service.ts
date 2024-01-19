@@ -11,6 +11,9 @@ import selectScheduleModel from 'src/model/schedule/selectScheduleModel';
 import momentToUtcString from 'src/utils/time/momentToUtcString';
 import { deleteScheduleRequestDto, deleteScheduleResponseDto } from 'src/dtos/schedule/deleteSchedule';
 import deleteScheduleModel from 'src/model/schedule/deleteScheduleModel';
+import convertTinyintToBoolean from 'src/utils/converter/convertTinyintToBoolean';
+import { checkScheduleRequestDto, checkScheduleResponseDto } from 'src/dtos/schedule/checkSchedule';
+import checkScheduleModel from 'src/model/schedule/checkScheduleModel';
 
 @Injectable()
 export class ScheduleService {
@@ -36,10 +39,10 @@ export class ScheduleService {
         let scheduleList = await selectScheduleModel({
             calendar_id: body.calendar_id,
             user_id: body.user_id,
-            start_date:   momentToUtcString(moment(body.target_date).subtract("M",3)),
-            end_date: momentToUtcString(moment(body.target_date).add("M",3)),
+            start_date:   momentToUtcString(moment(body.target_date).subtract("M",2)),
+            end_date: momentToUtcString(moment(body.target_date).add("M",2)),
         });
-        
+        scheduleList = scheduleList.map(schedule => convertTinyintToBoolean(schedule,["is_done"]));
         return generateResponse.SUCCESS({res, data: {scheduleList}, dto: getScheduleResponseDto});
     }
 
@@ -49,5 +52,13 @@ export class ScheduleService {
         if(result===null)return generateResponse.INTERNAL_SERVER_ERROR({res});
         if(result.updatedRows===0)return generateResponse.ENTITY_NOT_FOUND({res,message: "존재하지 않는 일정입니다."});
         return generateResponse.SUCCESS({res, data: {}, dto: deleteScheduleResponseDto});
+    }
+
+    async checkSchedule(body: checkScheduleRequestDto, res: Response): Promise<ResponseType> {
+        if(body.user_id===null)return generateResponse.ACCESS_DENIED({res});
+        let result = await checkScheduleModel({schedule_id: body.schedule_id, user_id: body.user_id});
+        if(result===null)return generateResponse.INTERNAL_SERVER_ERROR({res});
+        if(result.updatedRows===0)return generateResponse.ENTITY_NOT_FOUND({res,message: "존재하지 않는 일정입니다."});
+        return generateResponse.SUCCESS({res, data: {}, dto: checkScheduleResponseDto});
     }
 }
