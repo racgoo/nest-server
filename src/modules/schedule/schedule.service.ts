@@ -26,10 +26,10 @@ export class ScheduleService {
             due_date: body.due_date,
             user_id: body.user_id
         });
-        if(result.updatedRows===0){
+        if(result.length===0){
             return generateResponse.INTERNAL_SERVER_ERROR({res, message: "오류가 발생했습니다.\n다시 시도해 주세요.", dto: createCalenderResponseDto});
         }else{
-            return generateResponse.SUCCESS({res, data: {}, dto: createCalenderResponseDto});
+            return generateResponse.SUCCESS({res, data: {newSchedule: result[0]}, dto: createScheduleRequestDto});
         }
     }
 

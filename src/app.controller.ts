@@ -15,4 +15,10 @@ export class AppController {
   postHello(@Req() req: Request): string {
     return this.appService.postHello(req);
   }
+
+  @Post("/pushTest")
+  pushTest(@Req() req: Request): Promise<string> {
+    return this.appService.pushTest(req);
+  }
+  
 }

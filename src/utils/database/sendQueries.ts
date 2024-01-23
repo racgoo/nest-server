@@ -17,7 +17,7 @@ const innerQuery = async (conn,query) => {
     });
 }
 
-const sendQueries = async (queries) => {
+const sendQueries = async (queries): Promise<any> => {
     queries = ['START TRANSACTION;',...queries,'COMMIT;'];
     return new Promise((resolve, reject) => {
         let results = [];
