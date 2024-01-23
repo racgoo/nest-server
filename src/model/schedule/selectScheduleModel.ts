@@ -24,7 +24,8 @@ const selectScheduleModel = async ({user_id,calendar_id,start_date,end_date}: se
     return await sendQuery(`
         SELECT * FROM tbl_schedule 
         WHERE user_id = ${escape(user_id)} AND calendar_id = ${escape(calendar_id)} AND due_date
-        BETWEEN ${escape(start_date)} AND ${escape(end_date)};
+        BETWEEN ${escape(start_date)} AND ${escape(end_date)}
+        ORDER BY due_date ASC;
     `);
 }
 export default selectScheduleModel;

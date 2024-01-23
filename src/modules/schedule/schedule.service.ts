@@ -7,13 +7,16 @@ import { createCalenderResponseDto } from 'src/dtos/calendar/createCalender';
 import insertScheduleModel from 'src/model/schedule/insertScheduleModel';
 import { getScheduleRequestDto, getScheduleResponseDto } from 'src/dtos/schedule/getSchedule';
 import * as moment from 'moment';
-import selectScheduleModel from 'src/model/schedule/selectScheduleModel';
+import selectScheduleModel, { selectScheduleModelReturnType } from 'src/model/schedule/selectScheduleModel';
 import momentToUtcString from 'src/utils/time/momentToUtcString';
 import { deleteScheduleRequestDto, deleteScheduleResponseDto } from 'src/dtos/schedule/deleteSchedule';
 import deleteScheduleModel from 'src/model/schedule/deleteScheduleModel';
 import convertTinyintToBoolean from 'src/utils/converter/convertTinyintToBoolean';
 import { checkScheduleRequestDto, checkScheduleResponseDto } from 'src/dtos/schedule/checkSchedule';
 import checkScheduleModel from 'src/model/schedule/checkScheduleModel';
+import selectAllScheduleModel from 'src/model/schedule/selectAllScheduleModel';
+import { searchScheduleRequestDto, searchScheduleResponseDto } from 'src/dtos/schedule/searchSchedule';
+import selectScheduleByTitleModel, { selectScheduleByTitleModelReturnType } from 'src/model/schedule/selectScheduleByTitleModel';
 
 @Injectable()
 export class ScheduleService {
@@ -35,13 +38,20 @@ export class ScheduleService {
 
     async getSchedule(body: getScheduleRequestDto, res: Response): Promise<ResponseType> {
         if(body.user_id===null)return generateResponse.ACCESS_DENIED({res});
-        
-        let scheduleList = await selectScheduleModel({
-            calendar_id: body.calendar_id,
-            user_id: body.user_id,
-            start_date:   momentToUtcString(moment(body.target_date).subtract("M",2)),
-            end_date: momentToUtcString(moment(body.target_date).add("M",2)),
-        });
+        console.log(body)
+        let scheduleList: selectScheduleModelReturnType;
+        if(body.target_date){
+            scheduleList = await selectScheduleModel({
+                calendar_id: body.calendar_id,
+                user_id: body.user_id,
+                start_date:   momentToUtcString(moment(body.target_date).subtract("M",2)),
+                end_date: momentToUtcString(moment(body.target_date).add("M",2)),
+            });
+        }else{
+            scheduleList = await selectAllScheduleModel({
+                user_id: body.user_id
+            });
+        }
         scheduleList = scheduleList.map(schedule => convertTinyintToBoolean(schedule,["is_done"]));
         return generateResponse.SUCCESS({res, data: {scheduleList}, dto: getScheduleResponseDto});
     }
@@ -61,4 +71,16 @@ export class ScheduleService {
         if(result.updatedRows===0)return generateResponse.ENTITY_NOT_FOUND({res,message: "존재하지 않는 일정입니다."});
         return generateResponse.SUCCESS({res, data: {}, dto: checkScheduleResponseDto});
     }
+
+    async searchSchedule(body: searchScheduleRequestDto, res: Response): Promise<ResponseType> {
+        if(body.user_id===null)return generateResponse.ACCESS_DENIED({res});
+        let scheduleList: selectScheduleByTitleModelReturnType;
+        if(body.title===""){
+            scheduleList = [];
+        }else{
+            scheduleList = await selectScheduleByTitleModel({ user_id: body.user_id,calendar_id: body.calendar_id, title: body.title });
+        }
+        scheduleList = scheduleList.map(schedule => convertTinyintToBoolean(schedule,["is_done"]));
+        return generateResponse.SUCCESS({res, data: {scheduleList}, dto: searchScheduleResponseDto});
+    } 
 }

@@ -6,6 +6,7 @@ import { ResponseType } from 'src/utils/reponse/generateResponse';
 import { getScheduleRequestDto } from 'src/dtos/schedule/getSchedule';
 import { deleteScheduleRequestDto } from 'src/dtos/schedule/deleteSchedule';
 import { checkScheduleRequestDto } from 'src/dtos/schedule/checkSchedule';
+import { searchScheduleRequestDto } from 'src/dtos/schedule/searchSchedule';
 
 
 @Controller('schedule')
@@ -30,5 +31,10 @@ export class ScheduleController {
     @Post("/checkSchedule")
     checkSchedule(@Body() body: checkScheduleRequestDto,@Res() res: Response): Promise<ResponseType> {
       return this.scheduleService.checkSchedule(body,res);
+    }
+
+    @Post("/searchSchedule")
+    searchSchedule(@Body() body: searchScheduleRequestDto,@Res() res: Response): Promise<ResponseType> {
+      return this.scheduleService.searchSchedule(body,res);
     }
 }

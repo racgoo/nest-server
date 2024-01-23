@@ -2,14 +2,14 @@ import { IsDateString, IsEmail, IsEmpty, IsNotEmpty, IsNumber, IsPhoneNumber, Is
 import { defaultRequestDto } from "../common/defaultRequestDto";
 import { PartialType } from "@nestjs/mapped-types";
 
-export class getScheduleRequestDto extends PartialType(defaultRequestDto) {
+export class searchScheduleRequestDto extends PartialType(defaultRequestDto) {
     @IsNumber()
-    calendar_id: number | null | undefined
-    @IsDateString()
-    target_date: string | null | undefined
+    calendar_id: number
+    @IsString()
+    title: string
 }
 
-export class getScheduleResponseDto {
+export class searchScheduleResponseDto {
     scheduleList: {
         schedule_id: number
         user_id: number
