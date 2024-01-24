@@ -12,15 +12,5 @@ export class getScheduleRequestDto extends PartialType(defaultRequestDto) {
 }
 
 export class getScheduleResponseDto {
-    scheduleList: {
-        schedule_id: number
-        user_id: number
-        title: string
-        description: string
-        register_date: string
-        update_date: string
-        due_date: string
-        calendar_id: number
-        is_done: boolean
-    }[]
+    scheduleList: scheduleType[]
 }

@@ -5,14 +5,7 @@ export interface getCalendarListModelPropsType {
     user_id: number;
 }
 
-export type getCalendarListModelReturnType =Array<{
-    user_id: number;
-    calendar_id: number;
-    title: string;
-    description: string;
-    register_date: string;
-    update_date: string;
-}>
+export type getCalendarListModelReturnType =Array<calendarType>
 
 const getCalendarListModel = async ({user_id}: getCalendarListModelPropsType): Promise<getCalendarListModelReturnType> => {
     return await sendQuery(`

@@ -10,17 +10,7 @@ export interface insertScheduleModelPropsType {
     due_date: string;
 }
 
-export type insertScheduleModelReturnType ={
-    schedule_id: number
-    user_id: number
-    title: string
-    description: string
-    register_date: string
-    update_date: string
-    due_date: string
-    calendar_id: number
-    is_done: boolean
-}[]
+export type insertScheduleModelReturnType =scheduleType[]
 
 const insertScheduleModel = async ({user_id,calendar_id,title,description,due_date}: insertScheduleModelPropsType): Promise<insertScheduleModelReturnType> => {
   
