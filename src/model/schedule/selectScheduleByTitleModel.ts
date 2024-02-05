@@ -20,7 +20,12 @@ const selectScheduleByTitleModel = async ({user_id,calendar_id,title}: selectSch
                     'schedule_id',SD.schedule_id,
                     'user_id',SD.user_id,
                     'done_YN',SD.done_YN,
-                    'short_target_date',SD.short_target_date
+                    'short_target_date',SD.short_target_date,
+                    'repeat_type', SD.repeat_type,
+                    'daily_interval', SD.daily_interval,
+                    'weekly_interval', SD.weekly_interval,
+                    'weekly_days_mask', SD.weekly_days_mask,
+                    'short_due_date', SD.short_due_date
                 )
             ) AS schedule_details
         FROM 
