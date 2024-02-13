@@ -32,7 +32,7 @@ import { ScheduleModule } from './modules/schedule/schedule.module';
     CronService,
     CalendarService,
     ScheduleService,
-    Logger,
+    // Logger,
     {
       provide: APP_FILTER,
       useClass: ServiceExceptionToHttpExceptionFilter,
@@ -43,7 +43,7 @@ import { ScheduleModule } from './modules/schedule/schedule.module';
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
     consumer.apply(
-      LoggerMiddleware,
+      // LoggerMiddleware,
       TokenAuthMiddleware
     ).forRoutes('*'); // '*'는 모든 라우트에 미들웨어를 적용하는 것을 의미합니다.
   }
