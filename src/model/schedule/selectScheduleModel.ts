@@ -36,7 +36,7 @@ const selectScheduleModel = async ({
             tbl_schedule_info AS SI ON S.schedule_id = SI.schedule_id
         WHERE 
             S.user_id = ${escape(user_id)} 
-            AND S.calendar_id = ${escape(calendar_id,)} 
+            ${calendar_id===0 ? "" : `AND S.calendar_id = ${escape(calendar_id,)} `}
             AND (
                     ( S.due_date BETWEEN ${escape(start_date)} AND ${escape(end_date)} )
                 OR
