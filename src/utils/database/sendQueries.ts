@@ -45,7 +45,7 @@ const sendQueries = async (queries): Promise<any> => {
                 }
             });
         } catch (err) {
-            console.log('err')
+            console.log('err',err)
             resolve(null);
         }
     });

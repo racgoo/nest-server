@@ -9,6 +9,9 @@ export class checkScheduleRequestDto extends PartialType(defaultRequestDto) {
     @IsNumber()
     @IsNotEmpty()
     user_id: number
+    @IsString()
+    @IsDateString()
+    target_date: string
 }
 
 export class checkScheduleResponseDto {
