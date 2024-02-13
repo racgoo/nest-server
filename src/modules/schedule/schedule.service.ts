@@ -44,6 +44,7 @@ export class ScheduleService {
     }
 
     async getSchedule(body: getScheduleRequestDto, res: Response): Promise<ResponseType> {
+        console.log(body)
         if(body.user_id===null)return generateResponse.ACCESS_DENIED({res});
         let scheduleList: selectScheduleModelReturnType;
         if(body.target_date){
