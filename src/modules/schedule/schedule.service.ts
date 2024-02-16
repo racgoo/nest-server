@@ -18,6 +18,7 @@ import { searchScheduleRequestDto, searchScheduleResponseDto } from 'src/dtos/sc
 import selectScheduleByTitleModel, { selectScheduleByTitleModelReturnType } from 'src/model/schedule/selectScheduleByTitleModel';
 import addDummyScheduleInfo from 'src/utils/schedule/addDummyScheduleInfo';
 import momentToUtcString from 'src/utils/time/momentToUtcString';
+import formatToTimestamp from 'src/utils/time/formatToTimestamp';
 
 @Injectable()
 export class ScheduleService {
@@ -44,7 +45,6 @@ export class ScheduleService {
     }
 
     async getSchedule(body: getScheduleRequestDto, res: Response): Promise<ResponseType> {
-        console.log(body)
         if(body.user_id===null)return generateResponse.ACCESS_DENIED({res});
         let scheduleList: selectScheduleModelReturnType;
         if(body.target_date){
@@ -77,7 +77,7 @@ export class ScheduleService {
 
     async checkSchedule(body: checkScheduleRequestDto, res: Response): Promise<ResponseType> {
         if(body.user_id===null)return generateResponse.ACCESS_DENIED({res});
-        let result = await checkScheduleModel({schedule_id: body.schedule_id, user_id: body.user_id,target_date: body.target_date});
+        let result = await checkScheduleModel({schedule_id: body.schedule_id, user_id: body.user_id,target_date: formatToTimestamp( body.target_date)});
         if(result===null)return generateResponse.INTERNAL_SERVER_ERROR({res});
         if(result.updatedRows===0)return generateResponse.ENTITY_NOT_FOUND({res,message: "존재하지 않는 일정입니다."});
         return generateResponse.SUCCESS({res, data: {}, dto: checkScheduleResponseDto});

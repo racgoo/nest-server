@@ -1,4 +1,5 @@
 
+
 import { ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import {
@@ -10,13 +11,14 @@ import initGlobalVariables from './utils/init/initGlobalVariables';
 import { AppModule } from './app.module';
 import { logger } from './utils/logger/logger';
 import { Request, Response } from 'express';
-
+import * as moment from "moment";
 const Redis = require('ioredis');
 const redisAdapter = require('socket.io-redis');
 
 async function bootstrap() {
   // io.adapter(redisAdapter({ pubClient, subClient }));
   initGlobalVariables();
+  
   // const app = await NestFactory.create<NestFastifyApplication>(
   const app = await NestFactory.create(
     AppModule,

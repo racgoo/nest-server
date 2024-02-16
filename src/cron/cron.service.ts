@@ -1,12 +1,39 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { Cron } from '@nestjs/schedule';
 import axios from 'axios';
+
 import * as moment from 'moment-timezone';
+import selectAllScheduleWithUTCStringModel from 'src/model/schedule/selectAllScheduleWithUTCStringModel';
+import sendPushMessage from 'src/utils/push/sendPushMessage';
+import momentToUtcString from 'src/utils/time/momentToUtcString';
 // import moment from 'moment-timezone';
 
 @Injectable()
 export class CronService {
   private readonly logger = new Logger(CronService.name);
+  @Cron('0 * * * * *') // 매 45초마다 실행됨
+  async handleCron2() {
+    let pushMessages = await selectAllScheduleWithUTCStringModel({target_date: momentToUtcString(moment())});
+    pushMessages.some(pushMessage => {
+      let currentUtcString = momentToUtcString(moment());
+      switch(pushMessage.repeat_type){
+        case "WEEKLY":
+          // pushMessage.due_date
+          // sibal 이거 어려워
+          break;
+        case "MONTHLY":
+          if(Math.abs(parseInt(currentUtcString.substr(2,2)) - parseInt(pushMessage.due_date.substr(2,2))) % pushMessage.interval_num !== 0)return false;
+          if(currentUtcString.substr(8,2) !== pushMessage.due_date.substr(8,2))return false;
+          break;
+        case "YEARLY":
+          if(Math.abs(parseInt(currentUtcString.substr(2,2)) - parseInt(pushMessage.due_date.substr(2,2))) % pushMessage.interval_num !== 0)return false;
+          if(currentUtcString.substr(5,5) !== pushMessage.due_date.substr(5,5))return false;
+          break;
+      }
+      sendPushMessage({expo_push_token: pushMessage.expo_push_token, title: pushMessage.title});
+    });
+  }
+  
   @Cron('*/4 * * * * *') // 매 45초마다 실행됨
   handleCron() {
     // console.log(moment().format("YYYY-MM-DDTHH:mm:00.000Z"))
