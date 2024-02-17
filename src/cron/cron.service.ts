@@ -12,7 +12,7 @@ import momentToUtcString from 'src/utils/time/momentToUtcString';
 @Injectable()
 export class CronService {
   private readonly logger = new Logger(CronService.name);
-  @Cron('* * * * * *') // 매 45초마다 실행됨
+  @Cron('0 * * * * *') // 매 45초마다 실행됨
   async handleCron2() {
     let currentUtcString = momentToUtcString(moment());
     // let currentUtcString  = '2024-02-17 00:00:00';
