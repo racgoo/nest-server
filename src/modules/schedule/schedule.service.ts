@@ -56,14 +56,13 @@ export class ScheduleService {
                 start_date: start_date,
                 end_date: end_date,
             });
+            console.log(JSON.stringify(scheduleList))
             scheduleList = addDummyScheduleInfo(scheduleList,start_date,end_date);
         }else{
             scheduleList = await selectAllScheduleModel({
                 user_id: body.user_id
             });
         }
-        scheduleList = scheduleList.map(schedule => convertTinyintToBoolean(schedule,["is_done"]));
-        
         return generateResponse.SUCCESS({res, data: {scheduleList}, dto: getScheduleResponseDto});
     }
 
