@@ -49,7 +49,7 @@ export class ScheduleService {
         let scheduleList: selectScheduleModelReturnType;
         if(body.target_date){
             let start_date = momentToUtcString(moment(body.target_date).subtract("M",2));
-            let end_date = momentToUtcString(moment(body.target_date).add("M",2));
+            let end_date = momentToUtcString(moment(body.target_date).add("M",2).add("week",1));
             scheduleList = await selectScheduleModel({
                 calendar_id: body.calendar_id,
                 user_id: body.user_id,

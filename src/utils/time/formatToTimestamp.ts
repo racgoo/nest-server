@@ -1,3 +1,5 @@
+import * as moment from "moment";
+import momentToUtcString from "./momentToUtcString";
 const UTCRegex = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}.\d{3}Z$/;
 const ISORegex = /^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/;
 const formatToTimestamp= (dateString: string ) => {
@@ -8,7 +10,7 @@ const formatToTimestamp= (dateString: string ) => {
     } else if(ISORegex.test(dateString)) {
         return dateString;
     }else{
-        throw new Error("DATE STRING TYPE NOT MATCHED");
+        return (momentToUtcString(moment(dateString)) );
     }
 }
 export default formatToTimestamp;
