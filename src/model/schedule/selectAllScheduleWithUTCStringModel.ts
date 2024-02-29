@@ -39,9 +39,9 @@ const selectAllScheduleWithUTCStringModel = async ({
     WHERE 
     (( S.repeat_type = 'ONCE' AND S.due_date = ${escape(target_date)}  ) OR ( S.repeat_type != 'ONCE' AND TIME(S.due_date) = TIME(${escape(target_date)})  )) AND
     ( SI.done_Yn = "N" OR ISNULL(SI.done_Yn)) AND 
-    ( S.due_date >= ${escape(target_date)}) AND 
     ( S.interval_due_date > ${escape(target_date)});
 `);
+// ( S.due_date >= ${escape(target_date)}) AND 
   return result;
 };
 export default selectAllScheduleWithUTCStringModel;

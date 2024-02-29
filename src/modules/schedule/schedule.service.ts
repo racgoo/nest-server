@@ -56,7 +56,7 @@ export class ScheduleService {
                 start_date: start_date,
                 end_date: end_date,
             });
-            console.log(JSON.stringify(scheduleList))
+            // console.log(JSON.stringify(scheduleList))
             scheduleList = addDummyScheduleInfo(scheduleList,start_date,end_date);
         }else{
             scheduleList = await selectAllScheduleModel({

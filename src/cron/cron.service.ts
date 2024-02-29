@@ -7,6 +7,7 @@ import selectAllScheduleWithUTCStringModel from 'src/model/schedule/selectAllSch
 import sendPushMessage from 'src/utils/push/sendPushMessage';
 import formatToTimestamp from 'src/utils/time/formatToTimestamp';
 import momentToUtcString from 'src/utils/time/momentToUtcString';
+import utcStringToMoment from 'src/utils/time/utcStringToMoment';
 // import moment from 'moment-timezone';
 
 @Injectable()
@@ -14,15 +15,16 @@ export class CronService {
   private readonly logger = new Logger(CronService.name);
   @Cron('0 * * * * *') // 매 45초마다 실행됨
   async handleCron2() {
-    let currentUtcString = momentToUtcString(moment());
-    // let currentUtcString  = '2024-02-17 00:00:00';
+    let currentMoment = moment(); //timezone 설정 들어가야함... ㅅㅂ
+    let currentUtcString = momentToUtcString(currentMoment);
     let pushMessages =await selectAllScheduleWithUTCStringModel({target_date: currentUtcString});
-    pushMessages.some(pushMessage => {
+    pushMessages.some((pushMessage,i) => {
       let formattedDueDate = formatToTimestamp(pushMessage.due_date);
       switch(pushMessage.repeat_type){
         case "WEEKLY":
-          // pushMessage.due_date
-          // sibal 이거 어려워
+          let weekDiff = Math.abs(currentMoment.clone().set('day',0).diff(utcStringToMoment(formattedDueDate).set("day",0), 'weeks'));
+          if(weekDiff%pushMessage.interval_num!=0)return false;
+          if(pushMessage.weekly_days_mask[currentMoment.tz("Asia/Seoul").get("day")]=="0")return false;
           break;
         case "MONTHLY":
           if((Math.abs(parseInt(currentUtcString.substr(2,2)) - parseInt(formattedDueDate.substr(2,2))) % 12) % pushMessage.interval_num !== 0)return false;
