@@ -19,6 +19,7 @@ import selectScheduleByTitleModel, { selectScheduleByTitleModelReturnType } from
 import addDummyScheduleInfo from 'src/utils/schedule/addDummyScheduleInfo';
 import momentToUtcString from 'src/utils/time/momentToUtcString';
 import formatToTimestamp from 'src/utils/time/formatToTimestamp';
+import { getAllScheduleForSearchRequestDto, getAllScheduleForSearchResponseDto } from 'src/dtos/schedule/getAllScheduleForSearch';
 
 @Injectable()
 export class ScheduleService {
@@ -56,12 +57,9 @@ export class ScheduleService {
                 start_date: start_date,
                 end_date: end_date,
             });
-            // console.log(JSON.stringify(scheduleList))
             scheduleList = addDummyScheduleInfo(scheduleList,start_date,end_date);
         }else{
-            scheduleList = await selectAllScheduleModel({
-                user_id: body.user_id
-            });
+            generateResponse.BAD_REQUEST({res});
         }
         return generateResponse.SUCCESS({res, data: {scheduleList}, dto: getScheduleResponseDto});
     }
@@ -93,6 +91,15 @@ export class ScheduleService {
         scheduleList = scheduleList.map(schedule => convertTinyintToBoolean(schedule,["is_done"]));
         return generateResponse.SUCCESS({res, data: {scheduleList}, dto: searchScheduleResponseDto});
     } 
+
+    async getAllScheduleForSearch(body: getAllScheduleForSearchRequestDto, res: Response): Promise<ResponseType> {
+        if(body.user_id===null)return generateResponse.ACCESS_DENIED({res});
+        let scheduleList: scheduleType[];
+        scheduleList = await selectAllScheduleModel({user_id: body.user_id});
+        return generateResponse.SUCCESS({res, data: {scheduleList}, dto: getAllScheduleForSearchResponseDto});
+    } 
+
+     
 
     
 

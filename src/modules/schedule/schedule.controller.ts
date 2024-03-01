@@ -7,6 +7,7 @@ import { getScheduleRequestDto } from 'src/dtos/schedule/getSchedule';
 import { deleteScheduleRequestDto } from 'src/dtos/schedule/deleteSchedule';
 import { checkScheduleRequestDto } from 'src/dtos/schedule/checkSchedule';
 import { searchScheduleRequestDto } from 'src/dtos/schedule/searchSchedule';
+import { getAllScheduleForSearchRequestDto } from 'src/dtos/schedule/getAllScheduleForSearch';
 
 
 @Controller('schedule')
@@ -21,6 +22,11 @@ export class ScheduleController {
     @Post("/getSchedule")
     getSchedule(@Body() body: getScheduleRequestDto,@Res() res: Response): Promise<ResponseType> {
       return this.scheduleService.getSchedule(body,res);
+    }
+
+    @Post("/getAllScheduleForSearch")
+    getAllScheduleForSearch(@Body() body: getAllScheduleForSearchRequestDto,@Res() res: Response): Promise<ResponseType> {
+      return this.scheduleService.getAllScheduleForSearch(body,res);
     }
 
     @Post("/deleteSchedule")

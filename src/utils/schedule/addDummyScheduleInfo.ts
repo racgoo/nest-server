@@ -54,6 +54,7 @@ const addDummyScheduleInfo = (scheduleList: scheduleType[],start_date: string,en
                 let interval = 1;
                 switch(schedule.repeat_type){
                     case "DAILY": unit = "day";
+                        interval=schedule.interval_num
                         break;
                     case "WEEKLY": unit = "day"
                         break;
