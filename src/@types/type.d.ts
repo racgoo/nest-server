@@ -5,6 +5,7 @@ type calendarType = {
   description: string;
   register_date: string;
   update_date: string;
+  label_sequence_comma_string: string;
 };
 
 type scheduleType = {
@@ -25,6 +26,8 @@ type scheduleType = {
   interval_num: number;
   schedule_details?: scheduleDetailType[];
   schedule_infos?: scheduleInfoType[];
+  label?: labelType;
+  calendar_label_id: number;
 };
 
 type scheduleInfoType = {
@@ -51,3 +54,17 @@ type scheduleDetailType = {
     | '1'}${'0' | '1'}${'0' | '1'}`;
   short_due_date: number;
 };
+
+type specialDayType = {
+  local_date_number: number;
+  holiday_Yn: 'Y' | 'N';
+  name: string;
+}
+
+type labelType = {
+  calendar_label_id?: number;
+  user_id: number;
+  calendar_id: number;
+  name: string;
+  color: string;
+}

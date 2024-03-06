@@ -6,6 +6,9 @@ import { CalendarService } from './calendar.service';
 import { getCalendarListRequestDto } from 'src/dtos/calendar/getCalendarList';
 import { createCalenderRequestDto } from 'src/dtos/calendar/createCalender';
 import { deleteCalenderRequestDto } from 'src/dtos/calendar/deleteCalendar';
+import { saveCalendarLabelListRequestDto } from 'src/dtos/calendar/saveCalendarLabelList';
+import { getCalendarLabelListRequestDto } from 'src/dtos/calendar/getCalendarLabelList';
+import { deleteCalendarLabelRequestDto } from 'src/dtos/calendar/deleteCalendarLabel';
 
 @Controller('calendar')
 export class CalendarController {
@@ -24,5 +27,20 @@ export class CalendarController {
     @Post("/deleteCalendar")
     delteCalendar(@Body() body: deleteCalenderRequestDto,@Res() res: Response): Promise<ResponseType> {
       return this.calendarService.deleteCalendar(body,res);
+    }
+
+    @Post("/getCalendarLabelList")
+    getCalendarLabelList(@Body() body: getCalendarLabelListRequestDto,@Res() res: Response): Promise<ResponseType> {
+      return this.calendarService.getCalendarLabelList(body,res);
+    }
+
+    @Post("/saveCalendarLabelList")
+    saveCalendarLabelList(@Body() body: saveCalendarLabelListRequestDto,@Res() res: Response): Promise<ResponseType> {
+      return this.calendarService.saveCalendarLabelList(body,res);
+    }
+
+    @Post("/deleteCalendarLabel")
+    deleteCalendarLabel(@Body() body: deleteCalendarLabelRequestDto,@Res() res: Response): Promise<ResponseType> {
+      return this.calendarService.deleteCalendarLabel(body,res);
     }
 }

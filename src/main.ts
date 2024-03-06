@@ -12,6 +12,7 @@ import { AppModule } from './app.module';
 import { logger } from './utils/logger/logger';
 import { Request, Response } from 'express';
 import * as moment from "moment";
+import updateSpecialDayAction from './action/updateSpecialDayAction';
 const Redis = require('ioredis');
 const redisAdapter = require('socket.io-redis');
 

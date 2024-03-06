@@ -3,10 +3,13 @@ import { Cron } from '@nestjs/schedule';
 import axios from 'axios';
 
 import * as moment from 'moment-timezone';
+import updateSpecialDayAction from 'src/action/updateSpecialDayAction';
 import selectAllScheduleWithUTCStringModel from 'src/model/schedule/selectAllScheduleWithUTCStringModel';
+import updateSpecialDayModel from 'src/model/schedule/updateSpecialDayModel';
 import sendPushMessage from 'src/utils/push/sendPushMessage';
 import formatToTimestamp from 'src/utils/time/formatToTimestamp';
 import momentToUtcString from 'src/utils/time/momentToUtcString';
+import sleep from 'src/utils/time/sleep';
 import utcStringToMoment from 'src/utils/time/utcStringToMoment';
 // import moment from 'moment-timezone';
 
@@ -14,7 +17,7 @@ import utcStringToMoment from 'src/utils/time/utcStringToMoment';
 export class CronService {
   private readonly logger = new Logger(CronService.name);
   @Cron('0 * * * * *') // 매 45초마다 실행됨
-  async handleCron2() {
+  async handleCron1() {
     let currentMoment = moment(); //timezone 설정 들어가야함... ㅅㅂ
     let currentUtcString = momentToUtcString(currentMoment);
     let pushMessages =await selectAllScheduleWithUTCStringModel({target_date: currentUtcString});
@@ -39,31 +42,9 @@ export class CronService {
     });
   }
   
-  @Cron('*/4 * * * * *') // 매 45초마다 실행됨
-  handleCron() {
-    // console.log(moment().format("YYYY-MM-DDTHH:mm:00.000Z"))
-    // axios.post("https://jasoseol.com/employment/calendar_list.json",{
-    //     "start_time": moment().subtract(2,"M").format("YYYY-MM-DDTHH:mm:00.000Z"),
-    //     "end_time": moment().format("YYYY-MM-DDTHH:mm:00.000Z"),
-    //     // "end_time": "2023-12-02T15:00:00.000Z",
-    //     // "start_time": "2023-10-27T15:00:00.000Z"
-    // }).then(res=>{
-        
-    //     console.log(res.data.employment.filter(d=>{
-    //         if(moment(d.end_time) < moment())return false;
-    //         if(d.employments.find(e => {
-    //             if(e.duty_groups.find(k=>k.group_id === 175 || k.group_id === 173)){
-    //                 return true;
-    //             }else{
-    //                 return false;
-    //             }
-    //         }))return true;
-    //         else return false;
-    //     })
-    //     .sort((a,b) => moment(a.start_time) < moment(b.start_time))
-    //     .map(a=>`[${a.name}]\n${a.title}\n${moment(a.end_time).format("마감:MM-DD-HH")}\n`))
-    // }).catch(err=>{
-    //     console.log(err)
-    // })
+  @Cron('0 0 0 * * *') //1일에 한번씩 공휴일 업데이트 (2년치)
+  async handleCron2() {
+    //1일에 한번씩 공휴일 업데이트 (2년치)
+    updateSpecialDayAction();
   }
 }

@@ -13,4 +13,5 @@ export class getScheduleRequestDto extends PartialType(defaultRequestDto) {
 
 export class getScheduleResponseDto {
     scheduleList: scheduleType[]
+    specialDayList: specialDayType[]
 }

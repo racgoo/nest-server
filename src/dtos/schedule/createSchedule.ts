@@ -35,6 +35,10 @@ export class createScheduleRequestDto extends PartialType(defaultRequestDto) {
     weekly_days_mask: `${'0' | '1'}${'0' | '1'}${'0' | '1'}${'0' | '1'}${
     | '0'
     | '1'}${'0' | '1'}${'0' | '1'}`;
+
+    @IsNumber()
+    calendar_label_id: number;
+
 }
 
 export class createScheduleResponseDto {

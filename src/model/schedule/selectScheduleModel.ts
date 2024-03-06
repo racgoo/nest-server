@@ -1,5 +1,7 @@
 import sendQuery from 'src/utils/database/sendQuery';
 import { escape } from 'mysql';
+import sendQueries from 'src/utils/database/sendQueries';
+import * as moment from "moment"
 
 export interface selectScheduleModelPropsType {
   user_id: number;
@@ -29,11 +31,22 @@ const selectScheduleModel = async ({
                     'target_date', SI.target_date,
                     'user_id', SI.user_id
                 )
-            ) AS schedule_infos
+            ) AS schedule_infos,
+            JSON_ARRAYAGG(
+                JSON_OBJECT(
+                'calendar_label_id', CL.calendar_label_id,
+                'user_id', CL.user_id,
+                'calendar_id', CL.calendar_id,
+                'color', CL.color,
+                'name', CL.name
+              ) 
+            ) AS label
         FROM 
             tbl_schedule AS S
         LEFT JOIN 
             tbl_schedule_info AS SI ON S.schedule_id = SI.schedule_id
+        LEFT JOIN
+            tbl_calendar_label AS CL ON S.calendar_label_id = CL.calendar_label_id
         WHERE 
             S.user_id = ${escape(user_id)} 
             ${calendar_id===0 ? "" : `AND S.calendar_id = ${escape(calendar_id,)} `}
@@ -47,6 +60,7 @@ const selectScheduleModel = async ({
     `);
   result.some((schedule, index) => {
     result[index].schedule_infos = JSON.parse(schedule.schedule_infos);
+    result[index].label = JSON.parse(schedule.label)[0];
   });
   return result;
 };

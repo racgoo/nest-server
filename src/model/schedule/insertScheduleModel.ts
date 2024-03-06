@@ -15,6 +15,7 @@ export interface insertScheduleModelPropsType {
     | '1'}${'0' | '1'}${'0' | '1'}`;
   interval_due_date: string;
   interval_num: number;
+  calendar_label_id: number;
 }
 
 export type insertScheduleModelReturnType = scheduleType[];
@@ -29,11 +30,12 @@ const insertScheduleModel = async ({
   weekly_days_mask,
   interval_due_date,
   interval_num,
+  calendar_label_id
 }: insertScheduleModelPropsType): Promise<insertScheduleModelReturnType> => {
   return (
     await sendQueries([
       `
-      INSERT INTO tbl_schedule (user_id, calendar_id, title, description, due_date, repeat_type, weekly_days_mask, interval_due_date, interval_num)
+      INSERT INTO tbl_schedule (user_id, calendar_id, title, description, due_date, repeat_type, weekly_days_mask, interval_due_date, interval_num, calendar_label_id)
       SELECT 
           user_id,
           calendar_id,
@@ -43,7 +45,8 @@ const insertScheduleModel = async ({
           ${escape(repeat_type)},
           ${escape(weekly_days_mask)},
           ${escape(interval_due_date === "" ? "2038-01-01 00:00:00" : interval_due_date)},
-          ${escape(interval_num)}
+          ${escape(interval_num)},
+          COALESCE((SELECT calendar_label_id FROM tbl_calendar_label WHERE user_id = ${escape(user_id)} AND calendar_id = ${escape(calendar_id)} AND calendar_label_id = ${escape(calendar_label_id)}), -1) AS calendar_label_id
       FROM tbl_calendar
       WHERE user_id = ${escape(user_id)}
       AND calendar_id = ${escape(calendar_id)};

@@ -20,12 +20,14 @@ import addDummyScheduleInfo from 'src/utils/schedule/addDummyScheduleInfo';
 import momentToUtcString from 'src/utils/time/momentToUtcString';
 import formatToTimestamp from 'src/utils/time/formatToTimestamp';
 import { getAllScheduleForSearchRequestDto, getAllScheduleForSearchResponseDto } from 'src/dtos/schedule/getAllScheduleForSearch';
+import selectSpecialDayModel from 'src/model/schedule/selectSpecialDayModel';
 
 @Injectable()
 export class ScheduleService {
 
     async createSchedule(body: createScheduleRequestDto, res: Response): Promise<ResponseType> {
         if(body.user_id===null)return generateResponse.ACCESS_DENIED({res});
+        
         let result = await insertScheduleModel({
             calendar_id: body.calendar_id,
             title: body.title,
@@ -36,7 +38,8 @@ export class ScheduleService {
             interval_due_date: body.interval_due_date,
             is_done: false,
             repeat_type: body.repeat_type,
-            weekly_days_mask: body.weekly_days_mask
+            weekly_days_mask: body.weekly_days_mask,
+            calendar_label_id: body.calendar_label_id
         });
         if(result.length===0){
             return generateResponse.INTERNAL_SERVER_ERROR({res, message: "오류가 발생했습니다.\n다시 시도해 주세요.", dto: createCalenderResponseDto});
@@ -48,6 +51,7 @@ export class ScheduleService {
     async getSchedule(body: getScheduleRequestDto, res: Response): Promise<ResponseType> {
         if(body.user_id===null)return generateResponse.ACCESS_DENIED({res});
         let scheduleList: selectScheduleModelReturnType;
+        let specialDayList: specialDayType[];
         if(body.target_date){
             let start_date = momentToUtcString(moment(body.target_date).subtract("M",2));
             let end_date = momentToUtcString(moment(body.target_date).add("M",2).add("week",1));
@@ -57,11 +61,15 @@ export class ScheduleService {
                 start_date: start_date,
                 end_date: end_date,
             });
+            specialDayList = await selectSpecialDayModel({
+                end_date,
+                start_date
+            });
             scheduleList = addDummyScheduleInfo(scheduleList,start_date,end_date);
         }else{
             generateResponse.BAD_REQUEST({res});
         }
-        return generateResponse.SUCCESS({res, data: {scheduleList}, dto: getScheduleResponseDto});
+        return generateResponse.SUCCESS({res, data: {scheduleList,specialDayList}, dto: getScheduleResponseDto});
     }
 
     async deleteSchedule(body: deleteScheduleRequestDto, res: Response): Promise<ResponseType> {
@@ -99,7 +107,7 @@ export class ScheduleService {
         return generateResponse.SUCCESS({res, data: {scheduleList}, dto: getAllScheduleForSearchResponseDto});
     } 
 
-     
+    
 
     
 

@@ -36,6 +36,7 @@ const sendQueries = async (queries): Promise<any> => {
                         conn.rollback(() => {
                             conn.release();
                         });
+                        
                         resolve(null);
                         return true;
                     }

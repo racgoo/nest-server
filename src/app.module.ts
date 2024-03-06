@@ -36,7 +36,7 @@ import { UserService } from './modules/user/user.service';
     CalendarService,
     ScheduleService,
     UserService,
-    // Logger,
+    Logger,
     {
       provide: APP_FILTER,
       useClass: ServiceExceptionToHttpExceptionFilter,
@@ -47,7 +47,7 @@ import { UserService } from './modules/user/user.service';
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
     consumer.apply(
-      // LoggerMiddleware,
+      LoggerMiddleware,
       TokenAuthMiddleware
     ).forRoutes('*'); // '*'는 모든 라우트에 미들웨어를 적용하는 것을 의미합니다.
   }
