@@ -9,9 +9,7 @@ const updateSpecialDayAction = async () => {
       for(let month=1;month<=12;month++){
         let stringMonth = String(month).length === 1 ? `0${month}` : String(month);
         let stringYear = String(year);
-        console.log(stringYear,stringMonth);
         let result = await axios.get(`http://apis.data.go.kr/B090041/openapi/service/SpcdeInfoService/getHoliDeInfo?solYear=${stringYear}&solMonth=${stringMonth}&ServiceKey=UmzXQ2aP3py%2FWrdYS3vKLLhdVt1O%2FnIviLU7qdt9dR5g8ehHhifeSucprlKjVwUFimmS9i1ZK7Vtxcbk%2BCAz%2FQ%3D%3D&_type=json`);
-        console.log(result.data)
         await sleep(100);
         if(result?.data?.response?.body?.items?.item){
           let items = [];
